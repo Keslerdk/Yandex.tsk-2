@@ -1,5 +1,7 @@
 package com.example.yandextsk2.data.network;
 
+import com.example.yandextsk2.data.db.entity.StockSymbol;
+
 import java.util.List;
 
 import retrofit2.Call;

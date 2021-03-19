@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.yandextsk2.data.db.entity.StockSymbol;
+
 import java.io.IOException;
 import java.util.List;
 

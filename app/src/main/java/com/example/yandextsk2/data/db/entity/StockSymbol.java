@@ -1,13 +1,19 @@
-package com.example.yandextsk2.data.network;
+package com.example.yandextsk2.data.db.entity;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "stock_symbol")
 public class StockSymbol {
+
     String currency;
     String description;
     String displaySimbol;
     String figi;
     String mic;
-    String symbol;
     String type;
+    @PrimaryKey(autoGenerate = false)
+    String symbol;
 
     public StockSymbol(String currency, String description, String displaySimbol, String figi,
                        String mic, String symbol, String type) {
