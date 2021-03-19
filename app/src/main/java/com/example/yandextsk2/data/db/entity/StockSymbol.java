@@ -5,15 +5,16 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "stock_symbol")
 public class StockSymbol {
+    @PrimaryKey(autoGenerate = true)
+    public int id;
 
-    String currency;
-    String description;
-    String displaySimbol;
-    String figi;
-    String mic;
-    String type;
-    @PrimaryKey(autoGenerate = false)
-    String symbol;
+    public String currency;
+    public String description;
+    public String displaySimbol;
+    public String figi;
+    public String mic;
+    public String type;
+    public String symbol;
 
     public StockSymbol(String currency, String description, String displaySimbol, String figi,
                        String mic, String symbol, String type) {
