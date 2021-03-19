@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.data.network.ApiCall;
 import com.example.yandextsk2.ui.recyclerViews.StockItem;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 
@@ -47,6 +48,9 @@ public class StocksFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(StocksViewModel.class);
         // TODO: Use the ViewModel
+
+        new ApiCall().firstApiCall();
+
         stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
         stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
         stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
