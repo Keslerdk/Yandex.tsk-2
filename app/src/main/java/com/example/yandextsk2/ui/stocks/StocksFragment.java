@@ -1,5 +1,6 @@
 package com.example.yandextsk2.ui.stocks;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -7,19 +8,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.data.network.ApiCall;
 import com.example.yandextsk2.ui.recyclerViews.StockItem;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StocksFragment extends Fragment {
 
@@ -46,16 +51,24 @@ public class StocksFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(StocksViewModel.class);
+//        mViewModel = new ViewModelProvider(this).get(StocksViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(StocksViewModel.class);
         // TODO: Use the ViewModel
 
-        new ApiCall().firstApiCall();
+        new ApiCall(mViewModel).firstApiCall();
 
-        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
+        mViewModel.getAllStockSymbols().observe(getViewLifecycleOwner(), new Observer<List<StockSymbol>>() {
+            @Override
+            public void onChanged(List<StockSymbol> stockSymbols) {
+                Log.d("size", String.valueOf(stockSymbols.size()));
+//                stockList.add(new StockItem(stockSymbols.get(0).getSymbol(), "Yandex", "45264", "245"));
+            }
+        });
+//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
+//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
+//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
+//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
+//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
         build();
     }
 
