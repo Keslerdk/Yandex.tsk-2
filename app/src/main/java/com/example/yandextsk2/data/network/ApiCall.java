@@ -1,5 +1,7 @@
 package com.example.yandextsk2.data.network;
 
+import android.util.Log;
+
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 
@@ -24,9 +26,11 @@ public class ApiCall {
             @Override
             public void onResponse(Call<List<StockSymbol>> call, Response<List<StockSymbol>> response) {
                 List<StockSymbol> callstocksSymbols = response.body();
+                mViewModel.deleteAllStockSymbol();
                 for (StockSymbol val : callstocksSymbols) {
+                    Log.d("in api call", val.getSymbol());
                     mViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
-                            val.getFigi(), val.getMic(), val.getType(), val.getSymbol()));
+                            val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));
                 }
             }
 

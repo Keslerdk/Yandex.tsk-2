@@ -24,6 +24,10 @@ public class StocksRepo {
         new InserAsyncTask(stockSymbolDao).execute(stockSymbol);
     }
 
+    public void delteAllStockSymbol() {
+        new DelteAllAsyncTask(stockSymbolDao).execute();
+    }
+
     public LiveData<List<StockSymbol>> getAllStockSymbols() {
         return  stocksLiveData;
     }
@@ -41,6 +45,21 @@ public class StocksRepo {
         @Override
         protected Void doInBackground(StockSymbol... stockSymbols) {
             stockSymbolDao.insert(stockSymbols[0]);
+            return null;
+        }
+    }
+
+    private class DelteAllAsyncTask extends AsyncTask<Void, Void, Void>{
+
+        private StockSymbolDao stockSymbolDao;
+
+        public DelteAllAsyncTask(StockSymbolDao stockSymbolDao) {
+            this.stockSymbolDao = stockSymbolDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            stockSymbolDao.deleteAllStockSymbol();
             return null;
         }
     }

@@ -22,4 +22,7 @@ public interface StockSymbolDao {
     @Query("select * from stock_symbol where symbol = :symbol")
     LiveData<StockSymbol> getItemStockSymbol(String symbol);
 
+    @Query("DELETE FROM stock_symbol")
+    void deleteAllStockSymbol();
+
 }

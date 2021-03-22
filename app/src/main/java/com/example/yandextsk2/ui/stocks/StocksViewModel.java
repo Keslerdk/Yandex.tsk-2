@@ -23,6 +23,9 @@ public class StocksViewModel extends AndroidViewModel {
     }
     // TODO: Implement the ViewModel
     public void insert(StockSymbol stockSymbol) {stocksRepo.insert(stockSymbol);}
+    public void deleteAllStockSymbol() {
+        stocksRepo.delteAllStockSymbol();
+    }
     public LiveData<List<StockSymbol>> getAllStockSymbols() {return stockSymbolLiveData;}
     public LiveData<StockSymbol> getItemStockSymbol(String symbol) {
         return stocksRepo.getItemStockSymbol(symbol);

@@ -55,21 +55,20 @@ public class StocksFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(StocksViewModel.class);
         // TODO: Use the ViewModel
 
-        new ApiCall(mViewModel).firstApiCall();
+//        new ApiCall(mViewModel).firstApiCall();
 
         mViewModel.getAllStockSymbols().observe(getViewLifecycleOwner(), new Observer<List<StockSymbol>>() {
             @Override
             public void onChanged(List<StockSymbol> stockSymbols) {
                 Log.d("size", String.valueOf(stockSymbols.size()));
-//                stockList.add(new StockItem(stockSymbols.get(0).getSymbol(), "Yandex", "45264", "245"));
+                for (StockSymbol val : stockSymbols) {
+                    Log.d("all Stocks", val.getSymbol());
+                    stockList.add(new StockItem(val.getSymbol(), "Yandex", "45264", "245"));
+                }
+                build();
             }
         });
-//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-//        stockList.add(new StockItem("YNDX", "Yandex", "45264", "245"));
-        build();
+
     }
 
     private void build() {
