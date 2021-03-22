@@ -19,13 +19,22 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface ApiRequests {
     String API_KEY = "c0mlc6v48v6tkq133gdg";
 
     //https://finnhub.io/api/v1/stock/symbol?exchange=US&token=c0mlc6v48v6tkq133gdg
     @GET("stock/symbol")
-    Call<List<StockSymbol>> getStockSymbol();
+    Call<List<StockSymbol>> getStockSymbol(
+            @Query("exchange") String exchange
+    );
+
+//    https://finnhub.io/api/v1/quote?symbol=AAPL&token=c0mlc6v48v6tkq133gdg
+    @GET("quote")
+    Call<Quote> getQuote(
+            @Query("symbol") String symbol
+    );
 
     static ApiRequests invoke() {
         Interceptor requestInterceptor = new Interceptor() {
@@ -36,7 +45,6 @@ public interface ApiRequests {
                         .url()
                         .newBuilder()
                         .addQueryParameter("token", API_KEY)
-                        .addQueryParameter("exchange", "ME")
                         .build();
 
                 Request request = chain.request()

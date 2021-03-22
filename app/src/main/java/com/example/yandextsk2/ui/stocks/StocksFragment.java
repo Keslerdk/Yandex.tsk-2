@@ -61,9 +61,12 @@ public class StocksFragment extends Fragment {
             @Override
             public void onChanged(List<StockSymbol> stockSymbols) {
                 Log.d("size", String.valueOf(stockSymbols.size()));
+
+                new ApiCall(mViewModel).quoteApiCall(stockSymbols.get(0).getSymbol());
+
                 for (StockSymbol val : stockSymbols) {
-                    Log.d("all Stocks", val.getSymbol());
-                    stockList.add(new StockItem(val.getSymbol(), "Yandex", "45264", "245"));
+//                    Log.d("all Stocks", val.getSymbol());
+                    stockList.add(new StockItem(val.getSymbol(), val.getDescription(), "45264", "245"));
                 }
                 build();
             }

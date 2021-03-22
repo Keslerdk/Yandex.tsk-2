@@ -1,6 +1,5 @@
 package com.example.yandextsk2.data.network;
 
-import android.util.Log;
 
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
@@ -21,21 +20,38 @@ public class ApiCall {
 
     public void firstApiCall() {
         ApiRequests jsonPlaceHolderApi = ApiRequests.invoke();
-        Call<List<StockSymbol>> callStockSymbol = jsonPlaceHolderApi.getStockSymbol();
+        Call<List<StockSymbol>> callStockSymbol = jsonPlaceHolderApi.getStockSymbol("US");
         callStockSymbol.enqueue(new Callback<List<StockSymbol>>() {
             @Override
             public void onResponse(Call<List<StockSymbol>> call, Response<List<StockSymbol>> response) {
-                List<StockSymbol> callstocksSymbols = response.body();
+                List<StockSymbol> stocksSymbols = response.body();
                 mViewModel.deleteAllStockSymbol();
-                for (StockSymbol val : callstocksSymbols) {
-                    Log.d("in api call", val.getSymbol());
+                for (StockSymbol val : stocksSymbols) {
+//                    Log.d("in api call", val.getSymbol());
                     mViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
                             val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));
                 }
+                quoteApiCall(stocksSymbols.get(0).getSymbol());
             }
 
             @Override
             public void onFailure(Call<List<StockSymbol>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void quoteApiCall(String symbol) {
+        ApiRequests jsonPlaceHolderApi = ApiRequests.invoke();
+        Call<Quote> callQuote = jsonPlaceHolderApi.getQuote(symbol);
+        callQuote.enqueue(new Callback<Quote>() {
+            @Override
+            public void onResponse(Call<Quote> call, Response<Quote> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Quote> call, Throwable t) {
 
             }
         });

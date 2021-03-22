@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         tablayout = findViewById(R.id.tablayout);
         viewPager = findViewById(R.id.viewPager);
         tablayout.setupWithViewPager(viewPager);
