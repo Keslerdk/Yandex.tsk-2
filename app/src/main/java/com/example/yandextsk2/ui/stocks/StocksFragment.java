@@ -21,6 +21,7 @@ import com.example.yandextsk2.R;
 import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.data.network.ApiCall;
+import com.example.yandextsk2.data.network.websocket.WebSocket;
 import com.example.yandextsk2.ui.recyclerViews.StockItem;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 
@@ -36,6 +37,8 @@ public class StocksFragment extends Fragment {
     private RecyclerView recyclerViewStocks;
     private RecyclerView.LayoutManager layoutManager;
     private StocksRecyclerViewAdapter stocksAdapter;
+
+    private WebSocket webSocket =  new WebSocket();
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -97,6 +100,19 @@ public class StocksFragment extends Fragment {
             }
         });
 
+//        new WebSocket();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.initWebSocket();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webSocket.closeWebSocket();
     }
 
     /*

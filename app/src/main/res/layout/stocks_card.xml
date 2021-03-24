@@ -45,7 +45,7 @@
             app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:id="@+id/fullName"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="16dp"
             android:fontFamily="@font/montserrat"
             android:lineHeight="16dp"
