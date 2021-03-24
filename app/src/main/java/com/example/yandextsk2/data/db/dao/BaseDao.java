@@ -19,4 +19,7 @@ public interface BaseDao {
 
     @Query("UPDATE base set currentPrice =:currentPrice where ticker =:ticker")
     void updateCurrentPrice(String currentPrice, String ticker);
+
+    @Query("select * from base where ticker =:ticker")
+    LiveData<Base> getBaseItem(String ticker);
 }

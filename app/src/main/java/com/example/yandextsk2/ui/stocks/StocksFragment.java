@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +35,15 @@ public class StocksFragment extends Fragment {
 
     private StocksViewModel mViewModel;
 
-    private List<Base>  baseList= new ArrayList<>();
-
     private RecyclerView recyclerViewStocks;
     private RecyclerView.LayoutManager layoutManager;
     private StocksRecyclerViewAdapter stocksAdapter;
 
     private WebSocket webSocket;
+
+    List<StockItem> stockItems;
+
+    private boolean firstStart = true;
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -78,6 +81,7 @@ public class StocksFragment extends Fragment {
 //            }
 //        });
 
+        webSocket = new WebSocket(mViewModel);
         mViewModel.getBase().observe(getViewLifecycleOwner(), new Observer<List<Base>>() {
             @Override
             public void onChanged(List<Base> bases) {
@@ -89,24 +93,33 @@ public class StocksFragment extends Fragment {
                     mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
                     mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
                     mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
-                } else {
-//                    baseList = bases;
-//                    baseList.get()
-//                    Log.d("size", String.valueOf(bases.size()));
+                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));}
+
+                if (firstStart==true) {
+                    stockItems = new ArrayList<>();
+                    for (Base base : bases)  stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
+                            base.getCurrentPrice(), base.getDeltaPrice()));
+
 
                     recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
                     recyclerViewStocks.setHasFixedSize(true);
                     layoutManager = new LinearLayoutManager(getContext());
-                    stocksAdapter = new StocksRecyclerViewAdapter(bases);
+                    stocksAdapter = new StocksRecyclerViewAdapter(stockItems);
                     recyclerViewStocks.setLayoutManager(layoutManager);
                     recyclerViewStocks.setAdapter(stocksAdapter);
+
+                    firstStart = false;
+                } else {
+
+                    for (int i=0; i<bases.size(); i++) {
+                        stockItems.get(i).changeCurPrice(bases.get(i).getCurrentPrice());
+                        stocksAdapter.notifyItemChanged(i);
+                    }
                 }
-            }
+
+
+                }
         });
-        webSocket = new WebSocket(mViewModel);
-        build();
-//        new WebSocket();
     }
 
     @Override
@@ -122,6 +135,7 @@ public class StocksFragment extends Fragment {
     }
 
 
+    /*
     private void build() {
 
         recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
@@ -130,13 +144,7 @@ public class StocksFragment extends Fragment {
         stocksAdapter = new StocksRecyclerViewAdapter(baseList);
         recyclerViewStocks.setLayoutManager(layoutManager);
         recyclerViewStocks.setAdapter(stocksAdapter);
-    }
+    } */
 
-    public void test () {
-        Gson g = new Gson();
-        String mes = "{\"data\":[{\"c\":[\"1\",\"12\"],\"p\":633.18,\"s\":\"TSLA\",\"t\":1616614408490,\"v\":1}], \"type\":\"trade\"}";
-        ParseWebSocket parseWebSocket = g.fromJson(mes, ParseWebSocket.class);
-        Log.d("test ", parseWebSocket.getData().get(0).getS());
-    }
 
 }

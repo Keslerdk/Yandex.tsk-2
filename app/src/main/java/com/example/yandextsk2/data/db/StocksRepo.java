@@ -48,6 +48,9 @@ public class StocksRepo {
     public LiveData<List<Base>> getBase() {
         return baseLiveData;
     }
+    public LiveData<Base> getBaseItem(String ticker) {
+        return baseDao.getBaseItem(ticker);
+    }
 
     public LiveData<List<StockSymbol>> getAllStockSymbols() {
         return  stocksLiveData;

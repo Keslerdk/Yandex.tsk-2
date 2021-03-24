@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.yandextsk2.data.db.entity.Base;
+import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,8 +26,8 @@ public class WebSocket{
 
     WebSocketClient webSocketClient;
 
-    List<String> symbols = new ArrayList<>();
-    StocksViewModel mViewModel;
+    private List<String> symbols = new ArrayList<>();
+    private StocksViewModel mViewModel;
 
     public WebSocket(StocksViewModel mViewModel) {
         this.mViewModel = mViewModel;
@@ -92,6 +94,7 @@ public class WebSocket{
         for (ParseWebSocket.Data data : parseMessage.getData()) {
             mViewModel.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
         }
-        Log.d("Parse message", parseMessage.getData().get(0).getS());
+//        Log.d("Parse message", parseMessage.getData().get(0).getS());
     }
+
 }

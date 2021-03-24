@@ -42,4 +42,7 @@ public class StocksViewModel extends AndroidViewModel {
     public LiveData<List<Base>> getBase() {
         return baseLiveData;
     }
+    public LiveData<Base> getBaseItem(String ticker) {
+        return stocksRepo.getBaseItem(ticker);
+    }
 }

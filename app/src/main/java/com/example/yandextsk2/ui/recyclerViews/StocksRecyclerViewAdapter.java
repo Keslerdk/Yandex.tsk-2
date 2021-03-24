@@ -18,9 +18,9 @@ import java.util.List;
 
 public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecyclerViewAdapter.StocksViewHolder> {
 
-    private List<Base> baseItemList;
+    private List<StockItem> baseItemList;
 
-    public StocksRecyclerViewAdapter(List<Base> baseItemList) {
+    public StocksRecyclerViewAdapter(List<StockItem> baseItemList) {
         this.baseItemList = baseItemList;
     }
 
@@ -34,13 +34,19 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
 
     @Override
     public void onBindViewHolder(@NonNull StocksViewHolder holder, int position) {
-        Base current  = baseItemList.get(position);
+        StockItem current  = baseItemList.get(position);
 
-        holder.icon.setImageResource(current.getLogo());
-        holder.ticker.setText(current.getTicker());
-        holder.fullName.setText(current.getCompanyName());
-        holder.currentPrice.setText(current.getCurrentPrice());
-        holder.deltaPrice.setText(current.getDeltaPrice());
+//        holder.icon.setImageResource(current.getLogo());
+//        holder.ticker.setText(current.getTicker());
+//        holder.fullName.setText(current.getCompanyName());
+//        holder.currentPrice.setText(current.getCurrentPrice());
+//        holder.deltaPrice.setText(current.getDeltaPrice());
+
+        holder.icon.setImageResource(current.getmIcon());
+        holder.ticker.setText(current.getmTicker());
+        holder.fullName.setText(current.getmFullName());
+        holder.currentPrice.setText(current.getmCurrentPrice());
+        holder.deltaPrice.setText(current.getmDeltaPrice());
 
     }
 
