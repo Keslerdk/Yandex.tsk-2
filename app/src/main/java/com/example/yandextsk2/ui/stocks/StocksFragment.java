@@ -21,9 +21,11 @@ import com.example.yandextsk2.R;
 import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.data.network.ApiCall;
+import com.example.yandextsk2.data.network.websocket.ParseWebSocket;
 import com.example.yandextsk2.data.network.websocket.WebSocket;
 import com.example.yandextsk2.ui.recyclerViews.StockItem;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +34,13 @@ public class StocksFragment extends Fragment {
 
     private StocksViewModel mViewModel;
 
-    private ArrayList<StockItem> stockList = new ArrayList<>();
+    private List<Base>  baseList= new ArrayList<>();
 
     private RecyclerView recyclerViewStocks;
     private RecyclerView.LayoutManager layoutManager;
     private StocksRecyclerViewAdapter stocksAdapter;
 
-    private WebSocket webSocket =  new WebSocket();
+    private WebSocket webSocket;
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -89,7 +91,10 @@ public class StocksFragment extends Fragment {
                     mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
                     mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
                 } else {
-                    Log.d("size", String.valueOf(bases.size()));
+//                    baseList = bases;
+//                    baseList.get()
+//                    Log.d("size", String.valueOf(bases.size()));
+
                     recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
                     recyclerViewStocks.setHasFixedSize(true);
                     layoutManager = new LinearLayoutManager(getContext());
@@ -99,7 +104,8 @@ public class StocksFragment extends Fragment {
                 }
             }
         });
-
+        webSocket = new WebSocket(mViewModel);
+        build();
 //        new WebSocket();
     }
 
@@ -115,15 +121,22 @@ public class StocksFragment extends Fragment {
         webSocket.closeWebSocket();
     }
 
-    /*
+
     private void build() {
 
         recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
         recyclerViewStocks.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
-        stocksAdapter = new StocksRecyclerViewAdapter(stockList);
+        stocksAdapter = new StocksRecyclerViewAdapter(baseList);
         recyclerViewStocks.setLayoutManager(layoutManager);
         recyclerViewStocks.setAdapter(stocksAdapter);
-    } */
+    }
+
+    public void test () {
+        Gson g = new Gson();
+        String mes = "{\"data\":[{\"c\":[\"1\",\"12\"],\"p\":633.18,\"s\":\"TSLA\",\"t\":1616614408490,\"v\":1}], \"type\":\"trade\"}";
+        ParseWebSocket parseWebSocket = g.fromJson(mes, ParseWebSocket.class);
+        Log.d("test ", parseWebSocket.getData().get(0).getS());
+    }
 
 }

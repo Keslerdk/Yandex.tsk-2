@@ -4,6 +4,10 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.yandextsk2.ui.stocks.StocksViewModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -15,10 +19,17 @@ import javax.net.ssl.SSLSocketFactory;
 
 public class WebSocket{
 
+    String TAG = "Web Socket";
+    URI WEB_SOCKET_URL = URI.create("wss://ws.finnhub.io?token=c0mlc6v48v6tkq133gdg");
+
+    WebSocketClient webSocketClient;
 
     List<String> symbols = new ArrayList<>();
-    URI WEB_SOCKET_URL = URI.create("wss://ws.finnhub.io?token=c0mlc6v48v6tkq133gdg");
-    WebSocketClient webSocketClient;
+    StocksViewModel mViewModel;
+
+    public WebSocket(StocksViewModel mViewModel) {
+        this.mViewModel = mViewModel;
+    }
 
     public void closeWebSocket() {
         webSocketClient.close();
@@ -76,5 +87,11 @@ public class WebSocket{
 
     private void setUpMsg (String message) {
         Log.d("message", message);
+        Gson g = new Gson();
+        ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
+        for (ParseWebSocket.Data data : parseMessage.getData()) {
+            mViewModel.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
+        }
+        Log.d("Parse message", parseMessage.getData().get(0).getS());
     }
 }
