@@ -1,4 +1,4 @@
-package com.example.yandextsk2.data.db;
+package com.example.yandextsk2.data.db.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

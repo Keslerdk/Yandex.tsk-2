@@ -10,16 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.data.db.entity.Base;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecyclerViewAdapter.StocksViewHolder> {
 
-    private ArrayList<StockItem> stockItemList;
+    private List<Base> baseItemList;
 
-    public StocksRecyclerViewAdapter(ArrayList<StockItem> stockItemList) {
-        this.stockItemList = stockItemList;
+    public StocksRecyclerViewAdapter(List<Base> baseItemList) {
+        this.baseItemList = baseItemList;
     }
 
     @NonNull
@@ -32,19 +34,19 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
 
     @Override
     public void onBindViewHolder(@NonNull StocksViewHolder holder, int position) {
-        StockItem current  = stockItemList.get(position);
+        Base current  = baseItemList.get(position);
 
-//        holder.icon.setImageResource(current.);
-        holder.ticker.setText(current.getmTicker());
-        holder.fullName.setText(current.getmFullName());
-        holder.currentPrice.setText(current.getmCurrentPrice());
-        holder.deltaPrice.setText(current.getmDeltaPrice());
+        holder.icon.setImageResource(current.getLogo());
+        holder.ticker.setText(current.getTicker());
+        holder.fullName.setText(current.getCompanyName());
+        holder.currentPrice.setText(current.getCurrentPrice());
+        holder.deltaPrice.setText(current.getDeltaPrice());
 
     }
 
     @Override
     public int getItemCount() {
-        return stockItemList.size();
+        return baseItemList.size();
     }
 
     public class StocksViewHolder extends RecyclerView.ViewHolder {

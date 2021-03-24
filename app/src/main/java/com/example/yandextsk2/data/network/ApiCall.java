@@ -31,7 +31,7 @@ public class ApiCall {
                     mViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
                             val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));
                 }
-                quoteApiCall(stocksSymbols.get(0).getSymbol());
+//                quoteApiCall(stocksSymbols.get(0).getSymbol());
             }
 
             @Override
@@ -40,7 +40,7 @@ public class ApiCall {
             }
         });
     }
-
+    /*
     public void quoteApiCall(String symbol) {
         ApiRequests jsonPlaceHolderApi = ApiRequests.invoke();
         Call<Quote> callQuote = jsonPlaceHolderApi.getQuote(symbol);
@@ -55,5 +55,5 @@ public class ApiCall {
 
             }
         });
-    }
+    } */
 }

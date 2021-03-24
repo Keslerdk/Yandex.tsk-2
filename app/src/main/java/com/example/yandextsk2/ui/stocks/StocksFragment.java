@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.data.network.ApiCall;
 import com.example.yandextsk2.ui.recyclerViews.StockItem;
@@ -57,30 +58,56 @@ public class StocksFragment extends Fragment {
 
 //        new ApiCall(mViewModel).firstApiCall();
 
-        mViewModel.getAllStockSymbols().observe(getViewLifecycleOwner(), new Observer<List<StockSymbol>>() {
+//        mViewModel.getAllStockSymbols().observe(getViewLifecycleOwner(), new Observer<List<StockSymbol>>() {
+//            @Override
+//            public void onChanged(List<StockSymbol> stockSymbols) {
+//                Log.d("size", String.valueOf(stockSymbols.size()));
+//
+////                new ApiCall(mViewModel).quoteApiCall(stockSymbols.get(0).getSymbol());
+//
+//                for (StockSymbol val : stockSymbols) {
+////                    Log.d("all Stocks", val.getSymbol());
+//                    stockList.add(new StockItem(val.getSymbol(), val.getDescription(), "45264", "245"));
+//                }
+//                build();
+//            }
+//        });
+
+        mViewModel.getBase().observe(getViewLifecycleOwner(), new Observer<List<Base>>() {
             @Override
-            public void onChanged(List<StockSymbol> stockSymbols) {
-                Log.d("size", String.valueOf(stockSymbols.size()));
-
-                new ApiCall(mViewModel).quoteApiCall(stockSymbols.get(0).getSymbol());
-
-                for (StockSymbol val : stockSymbols) {
-//                    Log.d("all Stocks", val.getSymbol());
-                    stockList.add(new StockItem(val.getSymbol(), val.getDescription(), "45264", "245"));
+            public void onChanged(List<Base> bases) {
+                if (bases.isEmpty() || bases == null) {
+                    mViewModel.insert(new Base(R.drawable.yndx, "YNDX", "Yandex, LLC", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.aapl, "AAPL", "Apple Inc.", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.googl, "GOOGL", "Alphabet Class A", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.amzn, "AMZN", "Amazon.com", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
+                } else {
+                    Log.d("size", String.valueOf(bases.size()));
+                    recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
+                    recyclerViewStocks.setHasFixedSize(true);
+                    layoutManager = new LinearLayoutManager(getContext());
+                    stocksAdapter = new StocksRecyclerViewAdapter(bases);
+                    recyclerViewStocks.setLayoutManager(layoutManager);
+                    recyclerViewStocks.setAdapter(stocksAdapter);
                 }
-                build();
             }
         });
 
     }
 
+    /*
     private void build() {
+
         recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
         recyclerViewStocks.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         stocksAdapter = new StocksRecyclerViewAdapter(stockList);
         recyclerViewStocks.setLayoutManager(layoutManager);
         recyclerViewStocks.setAdapter(stocksAdapter);
-    }
+    } */
 
 }

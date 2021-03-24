@@ -31,10 +31,10 @@ public interface ApiRequests {
     );
 
 //    https://finnhub.io/api/v1/quote?symbol=AAPL&token=c0mlc6v48v6tkq133gdg
-    @GET("quote")
-    Call<Quote> getQuote(
-            @Query("symbol") String symbol
-    );
+//    @GET("quote")
+//    Call<Quote> getQuote(
+//            @Query("symbol") String symbol
+//    );
 
     static ApiRequests invoke() {
         Interceptor requestInterceptor = new Interceptor() {
@@ -45,6 +45,7 @@ public interface ApiRequests {
                         .url()
                         .newBuilder()
                         .addQueryParameter("token", API_KEY)
+                        .addQueryParameter("mic", "XNAS")
                         .build();
 
                 Request request = chain.request()
