@@ -1,13 +1,16 @@
 package com.example.yandextsk2.data.db;
 
 import android.app.Application;
+import android.app.AsyncNotedAppOp;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.yandextsk2.data.db.dao.BaseDao;
+import com.example.yandextsk2.data.db.dao.FavouriteDao;
 import com.example.yandextsk2.data.db.dao.StockSymbolDao;
 import com.example.yandextsk2.data.db.entity.Base;
+import com.example.yandextsk2.data.db.entity.Favourite;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 
 import java.util.List;
@@ -15,18 +18,23 @@ import java.util.List;
 public class StocksRepo {
     private StockSymbolDao stockSymbolDao;
     private BaseDao baseDao;
+    private FavouriteDao favouriteDao;
 
     LiveData<List<StockSymbol>> stocksLiveData;
     LiveData<List<Base>> baseLiveData;
+    LiveData<List<Favourite>> favouriteLiveData;
 
     public StocksRepo(Application application) {
         StocksDatabase stocksDatabase = StocksDatabase.getDatabase(application);
 
         stockSymbolDao = stocksDatabase.stockSymbolDao();
         baseDao = stocksDatabase.baseDao();
+        favouriteDao = stocksDatabase.favouriteDao();
 
         stocksLiveData = stockSymbolDao.getAllStockSymbol();
         baseLiveData = baseDao.getBase();
+        favouriteLiveData = favouriteDao.getFavourite();
+
     }
 
     //stocks symbols
@@ -39,7 +47,7 @@ public class StocksRepo {
     }
 
     public LiveData<List<StockSymbol>> getAllStockSymbols() {
-        return  stocksLiveData;
+        return stocksLiveData;
     }
 
     public LiveData<StockSymbol> getItemStockSymbol(String symbol) {
@@ -54,6 +62,7 @@ public class StocksRepo {
     public void updateCurrentPrice(String currentPrice, String ticker) {
         new UpdateCurPriceAsynTask(baseDao, ticker).execute(currentPrice);
     }
+
     public void updateDeltaPrice(String deltaPrice, String ticker) {
         new UpdateDeltaPriceAsyncTask(baseDao, ticker).execute(deltaPrice);
     }
@@ -61,6 +70,7 @@ public class StocksRepo {
     public void updateLastPrice(float lastPrice, String ticker) {
         new UpdateLastPriceAsyncTask(baseDao, ticker).execute(lastPrice);
     }
+
     public LiveData<List<Base>> getBase() {
         return baseLiveData;
     }
@@ -69,11 +79,38 @@ public class StocksRepo {
         return baseDao.getBaseItem(ticker);
     }
 
+    //favourite
+    public void insert(Favourite favourite) {
+        new InsertFavouriteAsyncTask(favouriteDao).execute(favourite);
+    }
+
+    public void delete(Favourite favourite) {
+        new DeleteFavouriteAsycTask(favouriteDao).execute(favourite);
+    }
+
+    public void updateCurrentPriceFav(String currentPrice, String ticker) {
+        new UpdateCurPriceFav(favouriteDao, ticker).execute(currentPrice);
+    }
+
+    public void updateDeltaPriceFav(String deltaPrice, String ticker) {
+        new UpdateDeltaPricaFav(favouriteDao, ticker).execute(ticker);
+    }
+
+    public LiveData<List<Favourite>> getFavourite() {
+        return favouriteLiveData;
+    }
+
+    public LiveData<Favourite> getFavouriteItem(String ticker) {
+        return favouriteDao.getFavouriteItem(ticker);
+    }
+
+
 
 
     private class InserAsyncTask extends AsyncTask<StockSymbol, Void, Void> {
 
         private StockSymbolDao stockSymbolDao;
+
         public InserAsyncTask(StockSymbolDao stockSymbolDao) {
             this.stockSymbolDao = stockSymbolDao;
         }
@@ -85,7 +122,7 @@ public class StocksRepo {
         }
     }
 
-    private class DelteAllAsyncTask extends AsyncTask<Void, Void, Void>{
+    private class DelteAllAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private StockSymbolDao stockSymbolDao;
 
@@ -100,9 +137,10 @@ public class StocksRepo {
         }
     }
 
-    private class UpdateCurPriceAsynTask extends AsyncTask<String, Void, Void>{
+    private class UpdateCurPriceAsynTask extends AsyncTask<String, Void, Void> {
         private String ticker;
         private BaseDao baseDao;
+
         public UpdateCurPriceAsynTask(BaseDao baseDao, String ticker) {
             this.ticker = ticker;
             this.baseDao = baseDao;
@@ -115,7 +153,7 @@ public class StocksRepo {
         }
     }
 
-    private class InsertBaseAsyncTask extends AsyncTask<Base, Void, Void>{
+    private class InsertBaseAsyncTask extends AsyncTask<Base, Void, Void> {
         private BaseDao baseDao;
 
         public InsertBaseAsyncTask(BaseDao baseDao) {
@@ -129,7 +167,7 @@ public class StocksRepo {
         }
     }
 
-    private class UpdateDeltaPriceAsyncTask extends AsyncTask<String, Void, Void>{
+    private class UpdateDeltaPriceAsyncTask extends AsyncTask<String, Void, Void> {
         BaseDao baseDao;
         String symbol;
 
@@ -145,7 +183,7 @@ public class StocksRepo {
         }
     }
 
-    private class UpdateLastPriceAsyncTask extends AsyncTask<Float, Void, Void>{
+    private class UpdateLastPriceAsyncTask extends AsyncTask<Float, Void, Void> {
         BaseDao baseDao;
         String symbol;
 
@@ -157,6 +195,66 @@ public class StocksRepo {
         @Override
         protected Void doInBackground(Float... floats) {
             baseDao.updateLastPrice(floats[0], symbol);
+            return null;
+        }
+    }
+
+    private class UpdateCurPriceFav extends AsyncTask<String, Void, Void>{
+        FavouriteDao favouriteDao;
+        String ticker;
+
+        public UpdateCurPriceFav(FavouriteDao favouriteDao, String ticker) {
+            this.favouriteDao = favouriteDao;
+            this.ticker = ticker;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            favouriteDao.updateCurrentPriceFav(strings[0], ticker);
+            return null;
+        }
+    }
+
+    private class UpdateDeltaPricaFav extends AsyncTask<String, Void, Void> {
+        private FavouriteDao favouriteDao;
+        private String ticker;
+
+        public UpdateDeltaPricaFav(FavouriteDao favouriteDao, String ticker) {
+            this.favouriteDao = favouriteDao;
+            this.ticker = ticker;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            favouriteDao.updateDeltaPriceFav(strings[0], ticker);
+            return null;
+        }
+    }
+
+    private class InsertFavouriteAsyncTask extends AsyncTask<Favourite, Void, Void>{
+        private FavouriteDao favouriteDao;
+
+        public InsertFavouriteAsyncTask(FavouriteDao favouriteDao) {
+            this.favouriteDao = favouriteDao;
+        }
+
+        @Override
+        protected Void doInBackground(Favourite... favourites) {
+            favouriteDao.insert(favourites[0]);
+            return null;
+        }
+    }
+
+    private class DeleteFavouriteAsycTask extends AsyncTask<Favourite, Void, Void>{
+        private FavouriteDao favouriteDao;
+
+        public DeleteFavouriteAsycTask(FavouriteDao favouriteDao) {
+            this.favouriteDao = favouriteDao;
+        }
+
+        @Override
+        protected Void doInBackground(Favourite... favourites) {
+            favouriteDao.delete(favourites[0]);
             return null;
         }
     }

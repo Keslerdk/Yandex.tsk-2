@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,35 +24,37 @@ import java.util.List;
 public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecyclerViewAdapter.StocksViewHolder> {
 
     private List<StockItem> baseItemList;
+    private OnItemClickListener mListener;
 
     public StocksRecyclerViewAdapter(List<StockItem> baseItemList) {
         this.baseItemList = baseItemList;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+    public void setOnStarClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public StocksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stocks_card, parent, false);
-        StocksViewHolder svh = new StocksViewHolder(v);
+        StocksViewHolder svh = new StocksViewHolder(v, mListener);
         return svh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull StocksViewHolder holder, int position) {
         StockItem current = baseItemList.get(position);
-//        Log.d("position", current.getmTicker());
-//        Log.d("position", String.valueOf(position));
+
+
         if (position % 2 != 0) {
             holder.itemCard.setCardBackgroundColor(Color.parseColor("#F0F4F7"));
         } else {
             holder.itemCard.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
         }
-
-//        holder.icon.setImageResource(current.getLogo());
-//        holder.ticker.setText(current.getTicker());
-//        holder.fullName.setText(current.getCompanyName());
-//        holder.currentPrice.setText(current.getCurrentPrice());
-//        holder.deltaPrice.setText(current.getDeltaPrice());
 
         float curPrice = Float.parseFloat(current.getmCurrentPrice());
         float deltaPrice = Float.parseFloat(current.getmDeltaPrice());
@@ -78,6 +81,7 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
             holder.deltaPrice.setTextColor(Color.parseColor("#24B25D"));
             holder.deltaPrice.setText("+$" + Math.abs(deltaPrice));
         }
+//        holder.star.setImageResource(R.drawable.ic_baseline_star_24);
 
 
     }
@@ -95,8 +99,9 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
         private TextView fullName;
         private TextView currentPrice;
         private TextView deltaPrice;
+        private ImageView star;
 
-        public StocksViewHolder(@NonNull View itemView) {
+        public StocksViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
 
             itemCard = itemView.findViewById(R.id.itemCard);
@@ -105,6 +110,22 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
             fullName = itemView.findViewById(R.id.fullName);
             currentPrice = itemView.findViewById(R.id.currentPrice);
             deltaPrice = itemView.findViewById(R.id.deltaPrice);
+            star = itemView.findViewById(R.id.star);
+
+
+            star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+//                            star.setColorFilter(Color.parseColor("#FFCA1C"));
+                            star.setImageResource(R.drawable.star_yel);
+                        }
+                    }
+                }
+            });
         }
     }
 }

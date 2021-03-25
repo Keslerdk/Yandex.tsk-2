@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.yandextsk2.data.db.StocksRepo;
 import com.example.yandextsk2.data.db.entity.Base;
+import com.example.yandextsk2.data.db.entity.Favourite;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class StocksViewModel extends AndroidViewModel {
     public void insert (Base base) {
         stocksRepo.insert(base);
     }
+    public void insert (Favourite favourite) {stocksRepo.insert(favourite);}
+
     public void updateCurrentPrice(String currentPrice, String ticker) {
         stocksRepo.updateCurrentPrice(currentPrice, ticker);
     }

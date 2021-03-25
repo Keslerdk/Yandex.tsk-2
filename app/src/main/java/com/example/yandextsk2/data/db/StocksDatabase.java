@@ -10,16 +10,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.yandextsk2.R;
 import com.example.yandextsk2.data.db.dao.BaseDao;
+import com.example.yandextsk2.data.db.dao.FavouriteDao;
 import com.example.yandextsk2.data.db.dao.StockSymbolDao;
 import com.example.yandextsk2.data.db.entity.Base;
+import com.example.yandextsk2.data.db.entity.Favourite;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 
-@androidx.room.Database(entities = {StockSymbol.class, Base.class},
-    version = 3)
+@androidx.room.Database(entities = {StockSymbol.class, Base.class, Favourite.class},
+    version = 4)
 public abstract class StocksDatabase extends RoomDatabase{
 
     public abstract StockSymbolDao stockSymbolDao();
     public abstract BaseDao baseDao();
+    public abstract FavouriteDao favouriteDao();
     public static StocksDatabase instance;
 
     public static StocksDatabase getDatabase(final Context context) {

@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.yandextsk2.R;
 import com.example.yandextsk2.data.db.entity.Base;
+import com.example.yandextsk2.data.db.entity.Favourite;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.data.network.ApiCall;
 import com.example.yandextsk2.data.network.websocket.ParseWebSocket;
@@ -45,6 +47,8 @@ public class StocksFragment extends Fragment {
 
     private boolean firstStart = true;
     private List<String> symbols = new ArrayList<>();
+
+    ImageView starBtn;
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -79,21 +83,26 @@ public class StocksFragment extends Fragment {
         mViewModel.getBase().observe(getViewLifecycleOwner(), new Observer<List<Base>>() {
             @Override
             public void onChanged(List<Base> bases) {
-                if (bases.isEmpty() || bases == null) {
-                    mViewModel.insert(new Base(R.drawable.yndx, "YNDX", "Yandex, LLC", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.aapl, "AAPL", "Apple Inc.", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.googl, "GOOGL", "Alphabet Class A", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.amzn, "AMZN", "Amazon.com", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
-                }
+
 
                 if (firstStart == true) {
 
+                    if (bases.isEmpty() || bases == null) {
+                        mViewModel.insert(new Base(R.drawable.yndx, "YNDX", "Yandex, LLC", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.aapl, "AAPL", "Apple Inc.", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.googl, "GOOGL", "Alphabet Class A", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.amzn, "AMZN", "Amazon.com", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
+                        mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
+                    }
+
                     stockItems = new ArrayList<>();
                     for (Base base : bases) {
+
+                        Log.d("logo",base.getTicker()+" "+ String.valueOf(base.getLogo()));
+                        Log.d("logo", base.getTicker()+R.drawable.yndx);
                         stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
                                 base.getCurrentPrice(), base.getDeltaPrice()));
                     }
@@ -118,6 +127,15 @@ public class StocksFragment extends Fragment {
                         stocksAdapter.notifyItemChanged(i);
 
                     }
+
+                    stocksAdapter.setOnStarClickListener(new StocksRecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            mViewModel.insert(new Favourite(bases.get(position).getLogo(), bases.get(position).getTicker(),
+                                    bases.get(position).getCompanyName(), bases.get(position).getCurrentPrice(),
+                                    bases.get(position).getDeltaPrice(), bases.get(position).getLastPrice()));
+                        }
+                    });
                 }
 
 
