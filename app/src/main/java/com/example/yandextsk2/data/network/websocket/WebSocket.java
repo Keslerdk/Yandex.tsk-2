@@ -29,6 +29,8 @@ public class WebSocket{
     private List<String> symbols = new ArrayList<>();
     private StocksViewModel mViewModel;
 
+    float lastPrice;
+
     public WebSocket(StocksViewModel mViewModel) {
         this.mViewModel = mViewModel;
     }
@@ -93,8 +95,12 @@ public class WebSocket{
         ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
         for (ParseWebSocket.Data data : parseMessage.getData()) {
             mViewModel.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
+//            mViewModel.updateDeltaPrice(String.valueOf(lastPrice - data.getP()), data.getS());
         }
 //        Log.d("Parse message", parseMessage.getData().get(0).getS());
     }
 
+    public void setLastPrice(float lastPrice) {
+        this.lastPrice = lastPrice;
+    }
 }

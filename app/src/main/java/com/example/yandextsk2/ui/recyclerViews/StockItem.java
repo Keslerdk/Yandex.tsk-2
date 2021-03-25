@@ -38,4 +38,8 @@ public class StockItem {
     public void changeCurPrice(String curPrice) {
         this.mCurrentPrice = curPrice;
     }
+
+    public void changeDeltaPrice(String deltaPrice) {
+        this.mDeltaPrice = deltaPrice;
+    }
 }

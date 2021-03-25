@@ -91,6 +91,7 @@ public class StocksFragment extends Fragment {
                 }
 
                 if (firstStart == true) {
+
                     stockItems = new ArrayList<>();
                     for (Base base : bases) {
                         stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
@@ -107,8 +108,15 @@ public class StocksFragment extends Fragment {
                     firstStart = false;
                 } else {
                     for (int i = 0; i < bases.size(); i++) {
-                        stockItems.get(i).changeCurPrice(bases.get(i).getCurrentPrice());
+                        String curPrice = bases.get(i).getCurrentPrice();
+                        float lastPrice = bases.get(i).getLastPrice();
+                        stockItems.get(i).changeCurPrice(curPrice);
+
+                        stockItems.get(i).changeDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice));
+//                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
+
                         stocksAdapter.notifyItemChanged(i);
+
                     }
                 }
 
