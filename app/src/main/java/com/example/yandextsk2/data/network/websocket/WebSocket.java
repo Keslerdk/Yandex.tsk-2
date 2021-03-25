@@ -2,13 +2,9 @@ package com.example.yandextsk2.data.network.websocket;
 
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.yandextsk2.data.db.entity.Base;
-import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
+import com.example.yandextsk2.ui.favourite.FavouriteViewModel;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -27,12 +23,16 @@ public class WebSocket{
     WebSocketClient webSocketClient;
 
     private List<String> symbols = new ArrayList<>();
-    private StocksViewModel mViewModel;
+    private StocksViewModel mViewModelStocks;
+    private FavouriteViewModel mViewModelFav;
 
     float lastPrice;
 
     public WebSocket(StocksViewModel mViewModel) {
-        this.mViewModel = mViewModel;
+        this.mViewModelStocks = mViewModel;
+    }
+    public WebSocket(FavouriteViewModel mViewModelFav) {
+        this.mViewModelFav = mViewModelFav;
     }
 
     public void closeWebSocket() {
@@ -67,7 +67,9 @@ public class WebSocket{
 
             @Override
             public void onMessage(String message) {
-                setUpMsg(message);
+                if (mViewModelFav==null) setUpMsg(message, mViewModelStocks);
+                else setUpMsg(message, mViewModelFav);
+
             }
 
             @Override
@@ -89,12 +91,23 @@ public class WebSocket{
 
     }
 
-    private void setUpMsg (String message) {
+    private void setUpMsg (String message, StocksViewModel mViewModelStocks) {
         Log.d("message", message);
         Gson g = new Gson();
         ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
         for (ParseWebSocket.Data data : parseMessage.getData()) {
-            mViewModel.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
+            mViewModelStocks.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
+//            mViewModel.updateDeltaPrice(String.valueOf(lastPrice - data.getP()), data.getS());
+        }
+//        Log.d("Parse message", parseMessage.getData().get(0).getS());
+    }
+
+    private void setUpMsg (String message, FavouriteViewModel mViewModelStocks) {
+        Log.d("message", message);
+        Gson g = new Gson();
+        ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
+        for (ParseWebSocket.Data data : parseMessage.getData()) {
+            mViewModelStocks.updateCurrentPriceFav(String.valueOf(data.getP()), data.getS());
 //            mViewModel.updateDeltaPrice(String.valueOf(lastPrice - data.getP()), data.getS());
         }
 //        Log.d("Parse message", parseMessage.getData().get(0).getS());

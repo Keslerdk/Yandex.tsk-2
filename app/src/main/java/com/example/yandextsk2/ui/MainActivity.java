@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.yandextsk2.R;
 import com.example.yandextsk2.ui.favourite.FavouriteFragment;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(stocksFragment, "Stocks");
         viewPagerAdapter.addFragment(favouriteFragment, "Favourite");
         viewPager.setAdapter(viewPagerAdapter);
+
+
+
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -76,5 +80,7 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return titleList.get(position);
         }
+
+
     }
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.example.yandextsk2.R;
 import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.Favourite;
+import com.example.yandextsk2.data.network.websocket.WebSocket;
 import com.example.yandextsk2.ui.recyclerViews.FavouriteRecyclerViewAdapter;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 
@@ -31,6 +32,10 @@ public class FavouriteFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FavouriteRecyclerViewAdapter favAdapter;
 
+    WebSocket webSocket;
+
+    private boolean firstStart = true;
+
     public static FavouriteFragment newInstance() {
         return new FavouriteFragment();
     }
@@ -38,9 +43,9 @@ public class FavouriteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view  =  inflater.inflate(R.layout.favourite_fragment, container, false);
+        View view = inflater.inflate(R.layout.favourite_fragment, container, false);
         recyclerViewFav = view.findViewById(R.id.recyclerViewFav);
-        return  view;
+        return view;
     }
 
     @Override
@@ -49,19 +54,30 @@ public class FavouriteFragment extends Fragment {
 //        mViewModel = new ViewModelProvider(this).get(FavouriteViewModel.class);
         mViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
         // TODO: Use the ViewModel
+        webSocket = new WebSocket(mViewModel);
+        webSocket.initWebSocket();
+
         mViewModel.getFavourite().observe(getViewLifecycleOwner(), new Observer<List<Favourite>>() {
             @Override
             public void onChanged(List<Favourite> favourites) {
 
+                if (firstStart) {
 //                recyclerViewFav = getView().findViewById(R.id.recyclerViewFav);
-                recyclerViewFav.setHasFixedSize(true);
-                layoutManager = new LinearLayoutManager(getContext());
-                favAdapter = new FavouriteRecyclerViewAdapter(favourites);
-                recyclerViewFav.setLayoutManager(layoutManager);
-                recyclerViewFav.setAdapter(favAdapter);
+                    recyclerViewFav.setHasFixedSize(true);
+                    layoutManager = new LinearLayoutManager(getContext());
+                    favAdapter = new FavouriteRecyclerViewAdapter(favourites);
+                    recyclerViewFav.setLayoutManager(layoutManager);
+                    recyclerViewFav.setAdapter(favAdapter);
+
+                    firstStart = false;
+                }
+                for (int i = 0; i < favourites.size(); i++) {
+                    favAdapter.notifyItemChanged(i);
+                }
 
                 favAdapter.setOnItemClickListener(new FavouriteRecyclerViewAdapter.OnItemClickListener() {
                     boolean deleted = false;
+
                     @Override
                     public void onItemClick(int position) {
 
@@ -78,4 +94,10 @@ public class FavouriteFragment extends Fragment {
         });
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        webSocket.closeWebSocket();
+    }
 }

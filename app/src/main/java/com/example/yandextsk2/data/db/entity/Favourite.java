@@ -49,4 +49,12 @@ public class Favourite {
     public int getLogo() {
         return logo;
     }
+
+    public void changeCurPrice(String currentPrice) {
+        this.currentPrice=currentPrice;
+    }
+
+    public void changeDeltaPrice(String deltaPrice) {
+        this.deltaPrice = deltaPrice;
+    }
 }

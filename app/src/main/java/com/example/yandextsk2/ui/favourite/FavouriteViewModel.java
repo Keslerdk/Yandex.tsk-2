@@ -25,6 +25,9 @@ public class FavouriteViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
 
     public void delete(Favourite favourite) {stocksRepo.delete(favourite);}
+    public void updateCurrentPriceFav(String currentPrice, String ticker) {
+        stocksRepo.updateCurrentPriceFav(currentPrice, ticker);
+    }
     public LiveData<List<Favourite>> getFavourite () {
         return favouriteLiveData;
     }

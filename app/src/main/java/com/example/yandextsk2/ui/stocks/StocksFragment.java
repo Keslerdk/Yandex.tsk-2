@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class StocksFragment extends Fragment {
     List<StockItem> stockItems;
 
     private boolean firstStart = true;
-    private boolean isFavourite ;
+    private boolean isFavourite;
     private List<String> symbols = new ArrayList<>();
 
 
@@ -179,7 +180,25 @@ public class StocksFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("Websocket", "pause");
         webSocket.closeWebSocket();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("Websocket", "stopped");
+        webSocket.closeWebSocket();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            Log.d("visible", "vdfe");
+            super.onResume();
+        }
+        else  {Log.d("unvisible", "kdb"); }
     }
 
 
