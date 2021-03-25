@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.yandextsk2.data.db.StocksRepo;
+import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.Favourite;
 
 import java.util.List;
@@ -23,7 +24,14 @@ public class FavouriteViewModel extends AndroidViewModel {
     }
     // TODO: Implement the ViewModel
 
+    public void delete(Favourite favourite) {stocksRepo.delete(favourite);}
     public LiveData<List<Favourite>> getFavourite () {
         return favouriteLiveData;
+    }
+    public LiveData<Base> getBaseItem(String ticker) {
+        return stocksRepo.getBaseItem(ticker);
+    }
+    public void updateIsFavourite(boolean isFavourite, String ticker) {
+        stocksRepo.updateIsFavourite(isFavourite, ticker);
     }
 }

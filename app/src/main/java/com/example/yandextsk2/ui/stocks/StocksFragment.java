@@ -46,6 +46,7 @@ public class StocksFragment extends Fragment {
     List<StockItem> stockItems;
 
     private boolean firstStart = true;
+    private boolean isFavourite ;
     private List<String> symbols = new ArrayList<>();
 
 
@@ -128,21 +129,26 @@ public class StocksFragment extends Fragment {
 
                     stocksAdapter.setOnStarClickListener(new StocksRecyclerViewAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(int position) {
-                            if (!bases.get(position).isFavourite()) {
+                        public void onStarClick(int position) {
+                            Log.d("Fav", String.valueOf(bases.get(position).isFavourite()));
+//                            if (!bases.get(position).isFavourite()) {
+                            isFavourite = bases.get(position).isFavourite();
+                            if (!isFavourite) {
+                                isFavourite = true;
                                 Log.d("on click", "CLICKED");
+                                mViewModel.updateIsFavourite(true, bases.get(position).getTicker());
                                 mViewModel.insert(new Favourite(bases.get(position).getLogo(), bases.get(position).getTicker(),
                                         bases.get(position).getCompanyName(), bases.get(position).getCurrentPrice(),
                                         bases.get(position).getDeltaPrice(), bases.get(position).getLastPrice()));
 
-                                mViewModel.updateIsFavourite(true, bases.get(position).getTicker());
                             } else {
+                                isFavourite = false;
                                 final boolean[] deleted = {false};
                                 Log.d("on click", "UNCLICKED");
                                 mViewModel.getFavouriteItem(bases.get(position).getTicker()).observe(getViewLifecycleOwner(), new Observer<Favourite>() {
                                     @Override
                                     public void onChanged(Favourite favourite) {
-                                        Log.d("Favourite", String.valueOf(favourite) + 222);
+//                                        Log.d("Favourite", String.valueOf(favourite) + 222);
                                         if (!deleted[0]) {
                                             mViewModel.delete(favourite);
                                             mViewModel.updateIsFavourite(false, bases.get(position).getTicker());
@@ -152,9 +158,6 @@ public class StocksFragment extends Fragment {
                                     }
                                 });
                             }
-//                            Favourite cur = mViewModel.getFavItemConst(bases.get(position).getTicker());
-//                            Log.d("current", cur.getCompanyName());
-//
                         }
                     });
                 }

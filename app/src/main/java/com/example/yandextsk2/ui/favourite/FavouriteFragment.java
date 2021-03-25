@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.Favourite;
 import com.example.yandextsk2.ui.recyclerViews.FavouriteRecyclerViewAdapter;
 import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
@@ -58,6 +59,21 @@ public class FavouriteFragment extends Fragment {
                 favAdapter = new FavouriteRecyclerViewAdapter(favourites);
                 recyclerViewFav.setLayoutManager(layoutManager);
                 recyclerViewFav.setAdapter(favAdapter);
+
+                favAdapter.setOnItemClickListener(new FavouriteRecyclerViewAdapter.OnItemClickListener() {
+                    boolean deleted = false;
+                    @Override
+                    public void onItemClick(int position) {
+
+                    }
+
+                    @Override
+                    public void onStarClick(int position) {
+                        mViewModel.updateIsFavourite(false, favourites.get(position).getTicker());
+                        mViewModel.delete(favourites.get(position));
+                        favAdapter.notifyItemRemoved(position);
+                    }
+                });
             }
         });
     }

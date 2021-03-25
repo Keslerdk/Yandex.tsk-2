@@ -19,6 +19,15 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
 
     List<Favourite> favouriteList;
 
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+        void onStarClick(int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
     public FavouriteRecyclerViewAdapter(List<Favourite> favouriteList) {
         this.favouriteList = favouriteList;
     }
@@ -27,7 +36,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     @Override
     public FavouriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stocks_card, parent, false);
-        FavouriteRecyclerViewAdapter.FavouriteViewHolder fvh = new FavouriteRecyclerViewAdapter.FavouriteViewHolder(v);
+        FavouriteRecyclerViewAdapter.FavouriteViewHolder fvh = new FavouriteRecyclerViewAdapter.FavouriteViewHolder(v, mListener);
         return fvh;
     }
 
@@ -41,6 +50,8 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
         holder.fullName.setText(current.getCompanyName());
         holder.currentPrice.setText(current.getCurrentPrice());
         holder.deltaPrice.setText(current.getDeltaPrice());
+
+        holder.star.setImageResource(R.drawable.ic_star_yel);
     }
 
     @Override
@@ -58,7 +69,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
         private TextView deltaPrice;
         private ImageView star;
 
-        public FavouriteViewHolder(@NonNull View itemView) {
+        public FavouriteViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             itemCard = itemView.findViewById(R.id.itemCard);
             icon = itemView.findViewById(R.id.icon);
@@ -67,6 +78,30 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
             currentPrice = itemView.findViewById(R.id.currentPrice);
             deltaPrice = itemView.findViewById(R.id.deltaPrice);
             star = itemView.findViewById(R.id.star);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+            star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onStarClick(position);
+                        }
+                    }
+                }
+            });
         }
+
     }
 }

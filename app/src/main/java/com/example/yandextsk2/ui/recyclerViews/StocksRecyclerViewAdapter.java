@@ -1,23 +1,18 @@
 package com.example.yandextsk2.ui.recyclerViews;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yandextsk2.R;
-import com.example.yandextsk2.data.db.entity.Base;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +26,7 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onStarClick(int position);
     }
 
     public void setOnStarClickListener(OnItemClickListener listener) {
@@ -124,8 +119,10 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
+                            listener.onStarClick(position);
 //                            star.setColorFilter(Color.parseColor("#FFCA1C"));
+
+
                             star.setImageResource(R.drawable.star_yel);
                         }
                     }

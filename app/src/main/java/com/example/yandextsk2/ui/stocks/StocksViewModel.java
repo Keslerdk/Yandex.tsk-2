@@ -67,10 +67,6 @@ public class StocksViewModel extends AndroidViewModel {
     public LiveData<Favourite> getFavouriteItem(String ticker) {
         return  stocksRepo.getFavouriteItem(ticker);
     }
-    public Favourite getFavItemConst(String ticker) {
-        return stocksRepo.getFavItemConst(ticker);
-    }
-
     public LiveData<List<Favourite>> getFavourite() {
         return favouriteLiveData;
     }
