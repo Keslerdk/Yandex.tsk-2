@@ -33,6 +33,7 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
+
     public void setOnStarClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
@@ -81,7 +82,11 @@ public class StocksRecyclerViewAdapter extends RecyclerView.Adapter<StocksRecycl
             holder.deltaPrice.setTextColor(Color.parseColor("#24B25D"));
             holder.deltaPrice.setText("+$" + Math.abs(deltaPrice));
         }
-//        holder.star.setImageResource(R.drawable.ic_baseline_star_24);
+        if (current.isFavorite()) {
+            holder.star.setImageResource(R.drawable.ic_star_yel);
+        } else {
+            holder.star.setImageResource(R.drawable.ic_baseline_star_24);
+        }
 
 
     }

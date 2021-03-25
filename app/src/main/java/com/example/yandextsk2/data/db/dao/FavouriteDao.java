@@ -30,4 +30,7 @@ public interface FavouriteDao {
 
     @Delete
     void delete(Favourite favourite);
+
+    @Query("select * from favourite where ticker =:ticker")
+    Favourite getFavItemConst(String ticker);
 }

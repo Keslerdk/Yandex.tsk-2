@@ -18,12 +18,15 @@ public class StocksViewModel extends AndroidViewModel {
     private StocksRepo stocksRepo;
     private LiveData<List<StockSymbol>> stockSymbolLiveData;
     private LiveData<List<Base>> baseLiveData;
+    private LiveData<List<Favourite>> favouriteLiveData;
 
     public StocksViewModel(@NonNull Application application) {
         super(application);
         stocksRepo = new StocksRepo(application);
+
         stockSymbolLiveData = stocksRepo.getAllStockSymbols();
         baseLiveData = stocksRepo.getBase();
+        favouriteLiveData = stocksRepo.getFavourite();
     }
     // TODO: Implement the ViewModel
     public void insert(StockSymbol stockSymbol) {stocksRepo.insert(stockSymbol);}
@@ -41,9 +44,16 @@ public class StocksViewModel extends AndroidViewModel {
     public void updateLastPrice(float lastPrice, String ticker) {
         stocksRepo.updateLastPrice(lastPrice, ticker);
     }
+    public void updateIsFavourite(boolean isFavourite, String ticker) {
+        stocksRepo.updateIsFavourite(isFavourite, ticker);
+    }
     public void deleteAllStockSymbol() {
         stocksRepo.delteAllStockSymbol();
     }
+    public void delete(Favourite favourite) {
+        stocksRepo.delete(favourite);
+    }
+
     public LiveData<List<StockSymbol>> getAllStockSymbols() {return stockSymbolLiveData;}
     public LiveData<StockSymbol> getItemStockSymbol(String symbol) {
         return stocksRepo.getItemStockSymbol(symbol);
@@ -53,5 +63,15 @@ public class StocksViewModel extends AndroidViewModel {
     }
     public LiveData<Base> getBaseItem(String ticker) {
         return stocksRepo.getBaseItem(ticker);
+    }
+    public LiveData<Favourite> getFavouriteItem(String ticker) {
+        return  stocksRepo.getFavouriteItem(ticker);
+    }
+    public Favourite getFavItemConst(String ticker) {
+        return stocksRepo.getFavItemConst(ticker);
+    }
+
+    public LiveData<List<Favourite>> getFavourite() {
+        return favouriteLiveData;
     }
 }

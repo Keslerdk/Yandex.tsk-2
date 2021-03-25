@@ -16,6 +16,8 @@ public class Base {
 
     public float lastPrice;
 
+    public boolean isFavourite;
+
     public Base(int logo, String ticker, String companyName, String currentPrice, String deltaPrice) {
         this.logo = logo;
         this.ticker = ticker;
@@ -23,6 +25,7 @@ public class Base {
         this.currentPrice = currentPrice;
         this.deltaPrice = deltaPrice;
         this.lastPrice = 0;
+        isFavourite = false;
     }
 
     public int getId() {
@@ -51,5 +54,9 @@ public class Base {
 
     public float getLastPrice() {
         return lastPrice;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
     }
 }

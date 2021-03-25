@@ -48,7 +48,6 @@ public class StocksFragment extends Fragment {
     private boolean firstStart = true;
     private List<String> symbols = new ArrayList<>();
 
-    ImageView starBtn;
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -100,11 +99,8 @@ public class StocksFragment extends Fragment {
 
                     stockItems = new ArrayList<>();
                     for (Base base : bases) {
-
-                        Log.d("logo",base.getTicker()+" "+ String.valueOf(base.getLogo()));
-                        Log.d("logo", base.getTicker()+R.drawable.yndx);
                         stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
-                                base.getCurrentPrice(), base.getDeltaPrice()));
+                                base.getCurrentPrice(), base.getDeltaPrice(), base.isFavourite()));
                     }
 
                     recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
@@ -122,7 +118,9 @@ public class StocksFragment extends Fragment {
                         stockItems.get(i).changeCurPrice(curPrice);
 
                         stockItems.get(i).changeDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice));
-                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
+//                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
+
+                        stockItems.get(i).changeIsFavourite(bases.get(i).isFavourite());
 
                         stocksAdapter.notifyItemChanged(i);
 
@@ -131,9 +129,32 @@ public class StocksFragment extends Fragment {
                     stocksAdapter.setOnStarClickListener(new StocksRecyclerViewAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            mViewModel.insert(new Favourite(bases.get(position).getLogo(), bases.get(position).getTicker(),
-                                    bases.get(position).getCompanyName(), bases.get(position).getCurrentPrice(),
-                                    bases.get(position).getDeltaPrice(), bases.get(position).getLastPrice()));
+                            if (!bases.get(position).isFavourite()) {
+                                Log.d("on click", "CLICKED");
+                                mViewModel.insert(new Favourite(bases.get(position).getLogo(), bases.get(position).getTicker(),
+                                        bases.get(position).getCompanyName(), bases.get(position).getCurrentPrice(),
+                                        bases.get(position).getDeltaPrice(), bases.get(position).getLastPrice()));
+
+                                mViewModel.updateIsFavourite(true, bases.get(position).getTicker());
+                            } else {
+                                final boolean[] deleted = {false};
+                                Log.d("on click", "UNCLICKED");
+                                mViewModel.getFavouriteItem(bases.get(position).getTicker()).observe(getViewLifecycleOwner(), new Observer<Favourite>() {
+                                    @Override
+                                    public void onChanged(Favourite favourite) {
+                                        Log.d("Favourite", String.valueOf(favourite) + 222);
+                                        if (!deleted[0]) {
+                                            mViewModel.delete(favourite);
+                                            mViewModel.updateIsFavourite(false, bases.get(position).getTicker());
+                                            deleted[0] = true;
+                                        }
+
+                                    }
+                                });
+                            }
+//                            Favourite cur = mViewModel.getFavItemConst(bases.get(position).getTicker());
+//                            Log.d("current", cur.getCompanyName());
+//
                         }
                     });
                 }
@@ -141,6 +162,7 @@ public class StocksFragment extends Fragment {
 
             }
         });
+
 
         webSocket = new WebSocket(mViewModel);
     }

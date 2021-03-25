@@ -71,6 +71,10 @@ public class StocksRepo {
         new UpdateLastPriceAsyncTask(baseDao, ticker).execute(lastPrice);
     }
 
+    public void updateIsFavourite(boolean isFavourite, String ticker) {
+        new UpdateIsFavouriteAsyncTask(baseDao, ticker).execute(isFavourite);
+    }
+
     public LiveData<List<Base>> getBase() {
         return baseLiveData;
     }
@@ -94,6 +98,10 @@ public class StocksRepo {
 
     public void updateDeltaPriceFav(String deltaPrice, String ticker) {
         new UpdateDeltaPricaFav(favouriteDao, ticker).execute(ticker);
+    }
+
+    public Favourite getFavItemConst(String ticker) {
+        return  favouriteDao.getFavItemConst(ticker);
     }
 
     public LiveData<List<Favourite>> getFavourite() {
@@ -200,8 +208,8 @@ public class StocksRepo {
     }
 
     private class UpdateCurPriceFav extends AsyncTask<String, Void, Void>{
-        FavouriteDao favouriteDao;
-        String ticker;
+        private FavouriteDao favouriteDao;
+        private String ticker;
 
         public UpdateCurPriceFav(FavouriteDao favouriteDao, String ticker) {
             this.favouriteDao = favouriteDao;
@@ -255,6 +263,22 @@ public class StocksRepo {
         @Override
         protected Void doInBackground(Favourite... favourites) {
             favouriteDao.delete(favourites[0]);
+            return null;
+        }
+    }
+
+    private class UpdateIsFavouriteAsyncTask extends AsyncTask<Boolean, Void, Void>{
+        private BaseDao baseDao;
+        private String ticker;
+
+        public UpdateIsFavouriteAsyncTask(BaseDao baseDao, String ticker) {
+            this.baseDao = baseDao;
+            this.ticker = ticker;
+        }
+
+        @Override
+        protected Void doInBackground(Boolean... booleans) {
+            baseDao.updateIsFavourite(booleans[0], ticker);
             return null;
         }
     }

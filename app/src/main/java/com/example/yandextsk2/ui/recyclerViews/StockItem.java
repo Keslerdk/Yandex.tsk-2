@@ -7,12 +7,15 @@ public class StockItem {
     private String mCurrentPrice;
     private String mDeltaPrice;
 
-    public StockItem(int icon, String mTicker, String mFullName, String mCurrentPrice, String mDeltaPrice) {
+    private boolean isFavorite;
+
+    public StockItem(int icon, String mTicker, String mFullName, String mCurrentPrice, String mDeltaPrice, boolean isFavourite) {
         this.mIcon = icon;
         this.mTicker = mTicker;
         this.mFullName = mFullName;
         this.mCurrentPrice = mCurrentPrice;
         this.mDeltaPrice = mDeltaPrice;
+        this.isFavorite = isFavourite;
     }
 
     public String getmTicker() {
@@ -35,11 +38,19 @@ public class StockItem {
         return mIcon;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
     public void changeCurPrice(String curPrice) {
         this.mCurrentPrice = curPrice;
     }
 
     public void changeDeltaPrice(String deltaPrice) {
         this.mDeltaPrice = deltaPrice;
+    }
+
+    public void changeIsFavourite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 }

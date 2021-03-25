@@ -28,4 +28,7 @@ public interface BaseDao {
 
     @Query("UPDATE base set lastPrice =:lastPrice where ticker =:ticker")
     void updateLastPrice(float lastPrice, String ticker);
+
+    @Query("UPDATE base set isFavourite =:isFavourite where ticker=:ticker")
+    void updateIsFavourite(boolean isFavourite, String ticker);
 }
