@@ -113,7 +113,7 @@ public class StocksFragment extends Fragment {
                         stockItems.get(i).changeCurPrice(curPrice);
 
                         stockItems.get(i).changeDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice));
-//                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
+                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
 
                         stocksAdapter.notifyItemChanged(i);
 
