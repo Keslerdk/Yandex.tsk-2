@@ -44,6 +44,7 @@ public class StocksFragment extends Fragment {
     List<StockItem> stockItems;
 
     private boolean firstStart = true;
+    private List<String> symbols = new ArrayList<>();
 
     public static StocksFragment newInstance() {
         return new StocksFragment();
@@ -54,6 +55,14 @@ public class StocksFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stocks_fragment, container, false);
 
+        symbols.add("YNDX");
+        symbols.add("AAPL");
+        symbols.add("GOOGL");
+        symbols.add("AMZN");
+        symbols.add("BAC");
+        symbols.add("MSFT");
+        symbols.add("TSLA");
+        symbols.add("MA");
         return view;
     }
 
@@ -63,25 +72,10 @@ public class StocksFragment extends Fragment {
 //        mViewModel = new ViewModelProvider(this).get(StocksViewModel.class);
         mViewModel = ViewModelProviders.of(this).get(StocksViewModel.class);
         // TODO: Use the ViewModel
+        if (firstStart) {
+            for (String val : symbols) new ApiCall(mViewModel).quoteApiCall(val);
+        }
 
-//        new ApiCall(mViewModel).firstApiCall();
-
-//        mViewModel.getAllStockSymbols().observe(getViewLifecycleOwner(), new Observer<List<StockSymbol>>() {
-//            @Override
-//            public void onChanged(List<StockSymbol> stockSymbols) {
-//                Log.d("size", String.valueOf(stockSymbols.size()));
-//
-////                new ApiCall(mViewModel).quoteApiCall(stockSymbols.get(0).getSymbol());
-//
-//                for (StockSymbol val : stockSymbols) {
-////                    Log.d("all Stocks", val.getSymbol());
-//                    stockList.add(new StockItem(val.getSymbol(), val.getDescription(), "45264", "245"));
-//                }
-//                build();
-//            }
-//        });
-
-        webSocket = new WebSocket(mViewModel);
         mViewModel.getBase().observe(getViewLifecycleOwner(), new Observer<List<Base>>() {
             @Override
             public void onChanged(List<Base> bases) {
@@ -93,13 +87,15 @@ public class StocksFragment extends Fragment {
                     mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
                     mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
                     mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
-                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));}
+                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
+                }
 
-                if (firstStart==true) {
+                if (firstStart == true) {
                     stockItems = new ArrayList<>();
-                    for (Base base : bases)  stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
-                            base.getCurrentPrice(), base.getDeltaPrice()));
-
+                    for (Base base : bases) {
+                        stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
+                                base.getCurrentPrice(), base.getDeltaPrice()));
+                    }
 
                     recyclerViewStocks = getView().findViewById(R.id.recyclerStocks);
                     recyclerViewStocks.setHasFixedSize(true);
@@ -110,16 +106,17 @@ public class StocksFragment extends Fragment {
 
                     firstStart = false;
                 } else {
-
-                    for (int i=0; i<bases.size(); i++) {
+                    for (int i = 0; i < bases.size(); i++) {
                         stockItems.get(i).changeCurPrice(bases.get(i).getCurrentPrice());
                         stocksAdapter.notifyItemChanged(i);
                     }
                 }
 
 
-                }
+            }
         });
+
+        webSocket = new WebSocket(mViewModel);
     }
 
     @Override

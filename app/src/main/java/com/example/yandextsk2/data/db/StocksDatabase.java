@@ -15,7 +15,7 @@ import com.example.yandextsk2.data.db.entity.Base;
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 
 @androidx.room.Database(entities = {StockSymbol.class, Base.class},
-    version = 2)
+    version = 3)
 public abstract class StocksDatabase extends RoomDatabase{
 
     public abstract StockSymbolDao stockSymbolDao();

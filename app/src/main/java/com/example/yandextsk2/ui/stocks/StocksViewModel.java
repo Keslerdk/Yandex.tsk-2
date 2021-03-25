@@ -32,6 +32,12 @@ public class StocksViewModel extends AndroidViewModel {
     public void updateCurrentPrice(String currentPrice, String ticker) {
         stocksRepo.updateCurrentPrice(currentPrice, ticker);
     }
+    public void updateDeltaPrice(String deltaPrice, String ticker) {
+        stocksRepo.updateDeltaPrice(deltaPrice, ticker);
+    }
+    public void updateLastPrice(float lastPrice, String ticker) {
+        stocksRepo.updateLastPrice(lastPrice, ticker);
+    }
     public void deleteAllStockSymbol() {
         stocksRepo.delteAllStockSymbol();
     }

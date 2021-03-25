@@ -30,6 +30,10 @@ public interface ApiRequests {
             @Query("exchange") String exchange
     );
 
+    @GET("quote")
+    Call<Quote> getQuote(
+            @Query("symbol") String symbol
+    );
 //    https://finnhub.io/api/v1/quote?symbol=AAPL&token=c0mlc6v48v6tkq133gdg
 //    @GET("quote")
 //    Call<Quote> getQuote(
@@ -45,7 +49,7 @@ public interface ApiRequests {
                         .url()
                         .newBuilder()
                         .addQueryParameter("token", API_KEY)
-                        .addQueryParameter("mic", "XNAS")
+//                        .addQueryParameter("mic", "XNAS")
                         .build();
 
                 Request request = chain.request()

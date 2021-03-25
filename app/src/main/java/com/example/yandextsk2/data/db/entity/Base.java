@@ -14,12 +14,15 @@ public class Base {
     public String currentPrice;
     public String deltaPrice;
 
+    public float lastPrice;
+
     public Base(int logo, String ticker, String companyName, String currentPrice, String deltaPrice) {
         this.logo = logo;
         this.ticker = ticker;
         this.companyName = companyName;
         this.currentPrice = currentPrice;
         this.deltaPrice = deltaPrice;
+        this.lastPrice = 0;
     }
 
     public int getId() {
@@ -46,7 +49,7 @@ public class Base {
         return deltaPrice;
     }
 
-    public void chageCurPrice(String currentPrice) {
-        this.currentPrice = currentPrice;
+    public float getLastPrice() {
+        return lastPrice;
     }
 }

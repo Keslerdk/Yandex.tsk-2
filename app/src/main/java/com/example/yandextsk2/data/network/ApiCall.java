@@ -1,6 +1,8 @@
 package com.example.yandextsk2.data.network;
 
 
+import android.util.Log;
+
 import com.example.yandextsk2.data.db.entity.StockSymbol;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 
@@ -31,7 +33,6 @@ public class ApiCall {
                     mViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
                             val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));
                 }
-//                quoteApiCall(stocksSymbols.get(0).getSymbol());
             }
 
             @Override
@@ -40,14 +41,16 @@ public class ApiCall {
             }
         });
     }
-    /*
+
     public void quoteApiCall(String symbol) {
         ApiRequests jsonPlaceHolderApi = ApiRequests.invoke();
         Call<Quote> callQuote = jsonPlaceHolderApi.getQuote(symbol);
         callQuote.enqueue(new Callback<Quote>() {
             @Override
             public void onResponse(Call<Quote> call, Response<Quote> response) {
-
+                mViewModel.updateCurrentPrice(String.valueOf(response.body().getC()), symbol);
+                mViewModel.updateLastPrice(response.body().getPc(), symbol);
+                mViewModel.updateDeltaPrice(String.valueOf(response.body().getC()- response.body().getPc()), symbol);
             }
 
             @Override
@@ -55,5 +58,5 @@ public class ApiCall {
 
             }
         });
-    } */
+    }
 }

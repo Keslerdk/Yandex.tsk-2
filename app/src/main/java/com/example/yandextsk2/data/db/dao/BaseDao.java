@@ -22,4 +22,10 @@ public interface BaseDao {
 
     @Query("select * from base where ticker =:ticker")
     LiveData<Base> getBaseItem(String ticker);
+
+    @Query("UPDATE base set deltaPrice =:deltaPrice where ticker =:ticker")
+    void updateDeltaPrice(String deltaPrice, String ticker);
+
+    @Query("UPDATE base set lastPrice =:lastPrice where ticker =:ticker")
+    void updateLastPrice(float lastPrice, String ticker);
 }

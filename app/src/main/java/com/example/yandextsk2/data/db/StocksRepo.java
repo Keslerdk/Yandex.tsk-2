@@ -38,26 +38,38 @@ public class StocksRepo {
         new DelteAllAsyncTask(stockSymbolDao).execute();
     }
 
+    public LiveData<List<StockSymbol>> getAllStockSymbols() {
+        return  stocksLiveData;
+    }
+
+    public LiveData<StockSymbol> getItemStockSymbol(String symbol) {
+        return stockSymbolDao.getItemStockSymbol(symbol);
+    }
+
     //base
     public void insert(Base base) {
         new InsertBaseAsyncTask(baseDao).execute(base);
     }
+
     public void updateCurrentPrice(String currentPrice, String ticker) {
         new UpdateCurPriceAsynTask(baseDao, ticker).execute(currentPrice);
+    }
+    public void updateDeltaPrice(String deltaPrice, String ticker) {
+        new UpdateDeltaPriceAsyncTask(baseDao, ticker).execute(deltaPrice);
+    }
+
+    public void updateLastPrice(float lastPrice, String ticker) {
+        new UpdateLastPriceAsyncTask(baseDao, ticker).execute(lastPrice);
     }
     public LiveData<List<Base>> getBase() {
         return baseLiveData;
     }
+
     public LiveData<Base> getBaseItem(String ticker) {
         return baseDao.getBaseItem(ticker);
     }
 
-    public LiveData<List<StockSymbol>> getAllStockSymbols() {
-        return  stocksLiveData;
-    }
-    public LiveData<StockSymbol> getItemStockSymbol(String symbol) {
-        return stockSymbolDao.getItemStockSymbol(symbol);
-    }
+
 
     private class InserAsyncTask extends AsyncTask<StockSymbol, Void, Void> {
 
@@ -113,6 +125,38 @@ public class StocksRepo {
         @Override
         protected Void doInBackground(Base... bases) {
             baseDao.insert(bases[0]);
+            return null;
+        }
+    }
+
+    private class UpdateDeltaPriceAsyncTask extends AsyncTask<String, Void, Void>{
+        BaseDao baseDao;
+        String symbol;
+
+        public UpdateDeltaPriceAsyncTask(BaseDao baseDao, String symbol) {
+            this.baseDao = baseDao;
+            this.symbol = symbol;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            baseDao.updateDeltaPrice(strings[0], symbol);
+            return null;
+        }
+    }
+
+    private class UpdateLastPriceAsyncTask extends AsyncTask<Float, Void, Void>{
+        BaseDao baseDao;
+        String symbol;
+
+        public UpdateLastPriceAsyncTask(BaseDao baseDao, String symbol) {
+            this.baseDao = baseDao;
+            this.symbol = symbol;
+        }
+
+        @Override
+        protected Void doInBackground(Float... floats) {
+            baseDao.updateLastPrice(floats[0], symbol);
             return null;
         }
     }
