@@ -1,5 +1,6 @@
 package com.example.yandextsk2.ui.recyclerViews;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<FavouriteRecyclerViewAdapter.FavouriteViewHolder> {
 
-    List<Favourite> favouriteList;
+    List<StockItem> favouriteList;
 
     private OnItemClickListener mListener;
     public interface OnItemClickListener {
@@ -28,7 +29,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
         mListener = listener;
     }
 
-    public FavouriteRecyclerViewAdapter(List<Favourite> favouriteList) {
+    public FavouriteRecyclerViewAdapter(List<StockItem> favouriteList) {
         this.favouriteList = favouriteList;
     }
 
@@ -43,13 +44,39 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     @Override
     public void onBindViewHolder(@NonNull FavouriteViewHolder holder, int position) {
 
-        Favourite current = favouriteList.get(position);
+        StockItem current = favouriteList.get(position);
 
-        holder.icon.setImageResource(current.getLogo());
-        holder.ticker.setText(current.getTicker());
-        holder.fullName.setText(current.getCompanyName());
-        holder.currentPrice.setText(current.getCurrentPrice());
-        holder.deltaPrice.setText(current.getDeltaPrice());
+//        holder.icon.setImageResource(current.getLogo());
+//        holder.ticker.setText(current.getTicker());
+//        holder.fullName.setText(current.getCompanyName());
+//        holder.currentPrice.setText(current.getCurrentPrice());
+//        holder.deltaPrice.setText(current.getDeltaPrice());
+
+        float curPrice = Float.parseFloat(current.getmCurrentPrice());
+        float deltaPrice = Float.parseFloat(current.getmDeltaPrice());
+        if (curPrice >= 1000) {
+            curPrice = (float) (((int) (curPrice * 10)) / 10.0);
+        } else {
+            curPrice = (float) (((int) (curPrice * 100)) / 100.0);
+        }
+
+        if (Math.abs(deltaPrice) > 1) {
+            deltaPrice = (float) (((int) (deltaPrice * 10)) / 10.0);
+        } else {
+            deltaPrice = (float) (((int) (deltaPrice * 100)) / 100.0);
+        }
+
+        holder.icon.setImageResource(current.getmIcon());
+        holder.ticker.setText(current.getmTicker());
+        holder.fullName.setText(current.getmFullName());
+        holder.currentPrice.setText("$" + curPrice);
+        if (deltaPrice < 0) {
+            holder.deltaPrice.setTextColor(Color.parseColor("#B32424"));
+            holder.deltaPrice.setText("-$" + Math.abs(deltaPrice));
+        } else {
+            holder.deltaPrice.setTextColor(Color.parseColor("#24B25D"));
+            holder.deltaPrice.setText("+$" + Math.abs(deltaPrice));
+        }
 
         holder.star.setImageResource(R.drawable.ic_star_yel);
     }

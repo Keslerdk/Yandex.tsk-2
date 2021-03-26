@@ -3,6 +3,8 @@ package com.example.yandextsk2.data.network.websocket;
 import android.util.Log;
 
 import com.example.yandextsk2.ui.favourite.FavouriteViewModel;
+import com.example.yandextsk2.ui.recyclerViews.StockItem;
+import com.example.yandextsk2.ui.recyclerViews.StocksRecyclerViewAdapter;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 import com.google.gson.Gson;
 
@@ -26,13 +28,16 @@ public class WebSocket{
     private StocksViewModel mViewModelStocks;
     private FavouriteViewModel mViewModelFav;
 
-    float lastPrice;
+    StocksRecyclerViewAdapter stockAdapter;
+    List<StockItem> stockItems;
 
-    public WebSocket(StocksViewModel mViewModel) {
+    public WebSocket(StocksViewModel mViewModel, List<StockItem> stockItems) {
         this.mViewModelStocks = mViewModel;
+        this.stockItems = stockItems;
     }
-    public WebSocket(FavouriteViewModel mViewModelFav) {
+    public WebSocket(FavouriteViewModel mViewModelFav, List<StockItem> stockItems) {
         this.mViewModelFav = mViewModelFav;
+        this.stockItems = stockItems;
     }
 
     public void closeWebSocket() {
@@ -42,14 +47,16 @@ public class WebSocket{
     public void initWebSocket() {
         Log.d("in onresume", "yes");
         URI coinbaseUri = WEB_SOCKET_URL;
-        symbols.add("YNDX");
-        symbols.add("AAPL");
-        symbols.add("GOOGL");
-        symbols.add("AMZN");
-        symbols.add("BAC");
-        symbols.add("MSFT");
-        symbols.add("TSLA");
-        symbols.add("MA");
+
+        for (StockItem stockItem : stockItems) symbols.add(stockItem.getmTicker());
+//        symbols.add("YNDX");
+//        symbols.add("AAPL");
+//        symbols.add("GOOGL");
+//        symbols.add("AMZN");
+//        symbols.add("BAC");
+//        symbols.add("MSFT");
+//        symbols.add("TSLA");
+//        symbols.add("MA");
 
         createWebSocketClient(coinbaseUri);
 
@@ -92,28 +99,28 @@ public class WebSocket{
     }
 
     private void setUpMsg (String message, StocksViewModel mViewModelStocks) {
-        Log.d("message", message);
+        Log.d("message Base", message);
         Gson g = new Gson();
         ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
         for (ParseWebSocket.Data data : parseMessage.getData()) {
             mViewModelStocks.updateCurrentPrice(String.valueOf(data.getP()), data.getS());
 //            mViewModel.updateDeltaPrice(String.valueOf(lastPrice - data.getP()), data.getS());
         }
-//        Log.d("Parse message", parseMessage.getData().get(0).getS());
     }
 
     private void setUpMsg (String message, FavouriteViewModel mViewModelStocks) {
-        Log.d("message", message);
+        Log.d("message Fav", message);
         Gson g = new Gson();
         ParseWebSocket parseMessage = g.fromJson(message, ParseWebSocket.class);
         for (ParseWebSocket.Data data : parseMessage.getData()) {
+
             mViewModelStocks.updateCurrentPriceFav(String.valueOf(data.getP()), data.getS());
+
 //            mViewModel.updateDeltaPrice(String.valueOf(lastPrice - data.getP()), data.getS());
         }
-//        Log.d("Parse message", parseMessage.getData().get(0).getS());
     }
 
-    public void setLastPrice(float lastPrice) {
-        this.lastPrice = lastPrice;
-    }
+//    public void setLastPrice(float lastPrice) {
+//        this.lastPrice = lastPrice;
+//    }
 }

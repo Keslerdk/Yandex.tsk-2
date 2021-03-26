@@ -78,6 +78,8 @@ public class StocksFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(StocksViewModel.class);
         // TODO: Use the ViewModel
         if (firstStart) {
+            //если фрагмент только открылся
+            //сделать апи запрос на текущую цену
             for (String val : symbols) new ApiCall(mViewModel).quoteApiCall(val);
         }
 
@@ -85,20 +87,23 @@ public class StocksFragment extends Fragment {
             @Override
             public void onChanged(List<Base> bases) {
 
+                if (bases.isEmpty() || bases == null) {
+                    //если база данных пустая
+                    //заполнить
+                    mViewModel.insert(new Base(R.drawable.yndx, "YNDX", "Yandex, LLC", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.aapl, "AAPL", "Apple Inc.", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.googl, "GOOGL", "Alphabet Class A", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.amzn, "AMZN", "Amazon.com", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
+                    mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
+                }
+
 
                 if (firstStart == true) {
-
-                    if (bases.isEmpty() || bases == null) {
-                        mViewModel.insert(new Base(R.drawable.yndx, "YNDX", "Yandex, LLC", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.aapl, "AAPL", "Apple Inc.", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.googl, "GOOGL", "Alphabet Class A", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.amzn, "AMZN", "Amazon.com", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.bac, "BAC", "Bank of America Corp", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.msft, "MSFT", "Microsoft Corporation", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.tsla, "TSLA", "Tesla Motors", "0", "0"));
-                        mViewModel.insert(new Base(R.drawable.ma, "MA", "Mastercard", "0", "0"));
-                    }
-
+                    //если фрагмент только открылся
+                    //отрисовать новый ресайклер вью
                     stockItems = new ArrayList<>();
                     for (Base base : bases) {
                         stockItems.add(new StockItem(base.getLogo(), base.getTicker(), base.getCompanyName(),
@@ -113,18 +118,24 @@ public class StocksFragment extends Fragment {
                     recyclerViewStocks.setAdapter(stocksAdapter);
 
                     firstStart = false;
+
+                    webSocket = new WebSocket(mViewModel, stockItems);
+                    webSocket.initWebSocket();
                 } else {
                     for (int i = 0; i < bases.size(); i++) {
                         String curPrice = bases.get(i).getCurrentPrice();
                         float lastPrice = bases.get(i).getLastPrice();
-                        stockItems.get(i).changeCurPrice(curPrice);
 
+                        //изменить цену и разницу
+                        stockItems.get(i).changeCurPrice(curPrice);
                         stockItems.get(i).changeDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice));
 //                        mViewModel.updateDeltaPrice(String.valueOf(Float.valueOf(curPrice) - lastPrice), bases.get(i).getTicker());
 
+                        //изменить состояние звездочки
                         stockItems.get(i).changeIsFavourite(bases.get(i).isFavourite());
 
                         stocksAdapter.notifyItemChanged(i);
+//                        Log.d("View Model", "changed");
 
                     }
 
@@ -133,6 +144,9 @@ public class StocksFragment extends Fragment {
                         public void onStarClick(int position) {
                             Log.d("Fav", String.valueOf(bases.get(position).isFavourite()));
 //                            if (!bases.get(position).isFavourite()) {
+                            //если элеменит уже в "лбюимых" удалить
+                            //иначе добавить
+                            //обновить бд
                             isFavourite = bases.get(position).isFavourite();
                             if (!isFavourite) {
                                 isFavourite = true;
@@ -168,13 +182,14 @@ public class StocksFragment extends Fragment {
         });
 
 
-        webSocket = new WebSocket(mViewModel);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        webSocket.initWebSocket();
+//        if (webSocket!=null) webSocket.initWebSocket();
+
     }
 
     @Override
@@ -185,20 +200,21 @@ public class StocksFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("Websocket", "stopped");
-        webSocket.closeWebSocket();
-    }
-
-    @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
+        Log.d("first start", String.valueOf(firstStart));
         if (visible && isResumed()) {
-            Log.d("visible", "vdfe");
+            Log.d("visible Stock", "visible ");
             super.onResume();
+            webSocket.initWebSocket();
+        } else {
+            Log.d("unvisible Stock", "unvisible");
+            if (!firstStart) {
+                firstStart = true;
+                Log.d("websoced", "close");
+                webSocket.closeWebSocket();
+            }
         }
-        else  {Log.d("unvisible", "kdb"); }
     }
 
 
