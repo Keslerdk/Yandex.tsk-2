@@ -8,10 +8,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.yandextsk2.R;
+import com.example.yandextsk2.SearchActivity;
 import com.example.yandextsk2.ui.favourite.FavouriteFragment;
 import com.example.yandextsk2.ui.stocks.StocksFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tablayout;
     private ViewPager viewPager;
+    private Button searchBtn;
 
     StocksFragment stocksFragment;
     FavouriteFragment favouriteFragment;
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         tablayout = findViewById(R.id.tablayout);
         viewPager = findViewById(R.id.viewPager);
+        searchBtn = findViewById(R.id.searchBtn);
+
         tablayout.setupWithViewPager(viewPager);
 
         stocksFragment =  new StocksFragment();
@@ -46,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(favouriteFragment, "Favourite");
         viewPager.setAdapter(viewPagerAdapter);
 
-
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

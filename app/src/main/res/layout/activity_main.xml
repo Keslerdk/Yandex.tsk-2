@@ -10,13 +10,33 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content">
+
+<!--        <androidx.appcompat.widget.SearchView-->
+<!--            android:id="@+id/searchView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_scrollFlags="scroll|enterAlways"/>-->
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            android:layout_margin="8dp"
+            android:background="@drawable/custom_background"
+            app:layout_scrollFlags="scroll|enterAlways">
+            <Button
+                android:id="@+id/searchBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Find company or ticker"
+                android:textSize="16dp"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_search"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                />
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tablayout"
