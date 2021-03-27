@@ -1,9 +1,8 @@
 package com.example.yandextsk2.data.network;
 
 
-import android.util.Log;
-
 import com.example.yandextsk2.data.db.entity.StockSymbol;
+import com.example.yandextsk2.ui.SearchViewModel;
 import com.example.yandextsk2.ui.stocks.StocksViewModel;
 
 import java.util.List;
@@ -14,10 +13,15 @@ import retrofit2.Response;
 
 public class ApiCall {
 
-    private StocksViewModel mViewModel;
+    private StocksViewModel stocksViewModel;
+    private SearchViewModel searchViewModel;
+
+    public ApiCall(SearchViewModel searchViewModel) {
+        this.searchViewModel = searchViewModel;
+    }
 
     public ApiCall(StocksViewModel mViewModel) {
-        this.mViewModel = mViewModel;
+        this.stocksViewModel = mViewModel;
     }
 
     public void firstApiCall() {
@@ -27,11 +31,15 @@ public class ApiCall {
             @Override
             public void onResponse(Call<List<StockSymbol>> call, Response<List<StockSymbol>> response) {
                 List<StockSymbol> stocksSymbols = response.body();
-                mViewModel.deleteAllStockSymbol();
+                if (stocksViewModel==null) {searchViewModel.deleteAllStockSymbol();}
+                else stocksViewModel.deleteAllStockSymbol();
                 for (StockSymbol val : stocksSymbols) {
 //                    Log.d("in api call", val.getSymbol());
-                    mViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
-                            val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));
+                    if (stocksViewModel==null) {searchViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
+                            val.getFigi(), val.getMic(),  val.getSymbol(), val.getType()));}
+
+                    else {stocksViewModel.insert(new StockSymbol(val.getCurrency(), val.getDescription(), val.getDisplaySimbol(),
+                            val.getFigi(), val.getMic(),  val.getSymbol(), val.getType())); }
                 }
             }
 
@@ -48,9 +56,14 @@ public class ApiCall {
         callQuote.enqueue(new Callback<Quote>() {
             @Override
             public void onResponse(Call<Quote> call, Response<Quote> response) {
-                mViewModel.updateCurrentPrice(String.valueOf(response.body().getC()), symbol);
-                mViewModel.updateLastPrice(response.body().getPc(), symbol);
-                mViewModel.updateDeltaPrice(String.valueOf(response.body().getC()- response.body().getPc()), symbol);
+                if (stocksViewModel==null) {
+//                    searchViewModel.updateCurrentPrice(String.valueOf(response.body().getC()), symbol);
+//                    stocksViewModel.updateLastPrice(response.body().getPc(), symbol);
+//                    stocksViewModel.updateDeltaPrice(String.valueOf(response.body().getC()- response.body().getPc()), symbol);
+                }
+                stocksViewModel.updateCurrentPrice(String.valueOf(response.body().getC()), symbol);
+                stocksViewModel.updateLastPrice(response.body().getPc(), symbol);
+                stocksViewModel.updateDeltaPrice(String.valueOf(response.body().getC()- response.body().getPc()), symbol);
             }
 
             @Override

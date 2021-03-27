@@ -16,6 +16,8 @@ public class StockSymbol {
     public String type;
     public String symbol;
 
+    public boolean isFavourite;
+
     public StockSymbol(String currency, String description, String displaySimbol, String figi,
                        String mic, String symbol, String type) {
         this.currency = currency;
@@ -25,6 +27,7 @@ public class StockSymbol {
         this.mic = mic;
         this.symbol = symbol;
         this.type = type;
+        this.isFavourite = false;
     }
 
     public String getCurrency() {
@@ -53,5 +56,9 @@ public class StockSymbol {
 
     public String getType() {
         return type;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
     }
 }

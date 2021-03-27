@@ -46,6 +46,10 @@ public class StocksRepo {
         new DelteAllAsyncTask(stockSymbolDao).execute();
     }
 
+    public LiveData<List<StockSymbol>> searchDatabase (String query) {
+        return stockSymbolDao.searchDatabase(query);
+    }
+
     public LiveData<List<StockSymbol>> getAllStockSymbols() {
         return stocksLiveData;
     }

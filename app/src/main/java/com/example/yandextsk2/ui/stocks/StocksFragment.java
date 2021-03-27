@@ -196,7 +196,7 @@ public class StocksFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("Websocket", "pause");
-        webSocket.closeWebSocket();
+         webSocket.closeWebSocket();
     }
 
     @Override

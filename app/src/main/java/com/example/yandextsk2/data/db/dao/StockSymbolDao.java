@@ -25,4 +25,16 @@ public interface StockSymbolDao {
     @Query("DELETE FROM stock_symbol")
     void deleteAllStockSymbol();
 
+    @Query("SELECT * FROM stock_symbol WHERE symbol LIKE '%' || :searchQuery  || '%' OR description LIKE '%' || :searchQuery  || '%'")
+    LiveData<List<StockSymbol>> searchDatabase(String searchQuery);
+
+//    @Query("UPDATE stock_symbol set deltaPrice =:deltaPrice where ticker =:ticker")
+//    void updateDeltaPrice(String deltaPrice, String ticker);
+//
+//    @Query("UPDATE stock_symbol set lastPrice =:lastPrice where ticker =:ticker")
+//    void updateLastPrice(float lastPrice, String ticker);
+//
+//    @Query("UPDATE stock_symbol set isFavourite =:isFavourite where ticker=:ticker")
+//    void updateIsFavourite(boolean isFavourite, String ticker);
+
 }
